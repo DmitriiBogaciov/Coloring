@@ -2,73 +2,70 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
-nodes = 50
-edges = 3
-steps = 1000
+nodes = 7
+edges = 1
+all_steps = 1000
 
 Gb = nx.barabasi_albert_graph(nodes, edges)
-colormus = list(range(1, nodes + 1))
+color_mus = list(range(1, nodes + 1))
 rng = np.random.default_rng(12345)  # seed
 
 
-def iscoloring(G, col):
+def is_coloring(G, col):
     for u, v in G.edges():
         if col[u] == col[v]:
             return False
     return True
 
 
-def color(G, k, steps):
-    col = [0] * G.number_of_nodes()
-    bestcol = col[:]
-    bestscore = 0
-
-    # Random initialization
-    for i in range(G.number_of_nodes()):
-        col[i] = rng.integers(k)
-    score = sum([iscoloring(G, col)])
-    if score > bestscore:
-        bestcol = col[:]
-        bestscore = score
+def color(G, colors, k, steps):
+    best_col = colors[:]
+    best_num_colors = len(set(colors))
 
     for i in range(steps):
         # Random walk
-        rnode = rng.integers(G.number_of_nodes())
-        rcolor = rng.integers(k)
-        colnew = col[:]
-        colnew[rnode] = rcolor
-        score = sum([iscoloring(G, colnew)])
-        if score > bestscore:
-            bestcol = colnew[:]
-            bestscore = score
+        r_node = rng.integers(G.number_of_nodes())  # выбираем случайную вершину
+        r_color = colors[rng.integers(k)]  # выбираем случайный цвет
+        col_new = best_col[:]  # копируем текущую раскраску новую раскраску
+        col_new[r_node] = r_color  # меняем цыет верщины
+        if is_coloring(G, col_new):  # проверяем если раскраска правильная
+            if len(set(col_new)) <= best_num_colors:
+                best_col = col_new[:]
+                best_num_colors = len(set(col_new))
         # Hill climbing
-        for j in range(10):
-            rnode = rng.integers(G.number_of_nodes())
-            rcolor = rng.integers(k)
-            colnew = col[:]
-            colnew[rnode] = rcolor
-            score = sum([iscoloring(G, colnew)])
-            if score > bestscore:
-                bestcol = colnew[:]
-                bestscore = score
-            if score >= sum([iscoloring(G, col)]):
-                col = colnew[:]
-                break
-    return bestcol, bestscore == G.number_of_nodes()
+        for j in range(steps):
+            r_node = rng.integers(G.number_of_nodes())  # выбираем случайную вершину
+            r_color = colors[rng.integers(k)]  # выбираем случайный цвет
+            col_new = best_col[:]  # копируем текущую раскраску новую раскраску
+            col_new[r_node] = r_color  # меняем цыет верщины
+            if is_coloring(G, col_new):  # проверяем если раскраска правильная
+                if len(set(col_new)) <= best_num_colors:
+                    best_col = col_new[:]
+                    best_num_colors = len(set(col_new))
+
+    print(best_col)
+    print(is_coloring(G, best_col))
+    print(len(set(best_col)))
+    nx.draw(G, node_color=best_col, with_labels=True)
+    plt.show()
+    return best_col, is_coloring(G, best_col), len(set(best_col))
 
 
 def plot(G, cols):
     k = np.max(cols)
     symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
-    colmap = ["#" + ''.join(rng.choice(symbols, 6)) for _ in range(k + 1)]
+    col_map = ["#" + ''.join(rng.choice(symbols, 6)) for _ in range(k + 1)]
 
-    colors = [colmap[c] for c in cols]
+    colors = [col_map[c] for c in cols]
 
-    exam = iscoloring(Gb, colors)
+    exam = is_coloring(Gb, colors)
     print(exam)
-    nx.draw(G, node_color=colors, with_labels=True)
-    plt.show()
+
+    color(Gb, colors, k, all_steps)
+
+    # nx.draw(G, node_color=colors, with_labels=True)
+    # plt.show()
 
 
-plot(Gb, colormus)
+plot(Gb, color_mus)
 plt.pause(0.001)
