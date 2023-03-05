@@ -12,9 +12,9 @@ color_mus = list(range(1, nodes + 1))
 rng = np.random.default_rng(12345)  # seed
 
 
-def is_coloring(G, col):
+def is_coloring(G, colors):
     for u, v in G.edges():
-        if col[u] == col[v]:
+        if colors[u] == colors[v]:
             return False
     return True
 
@@ -76,7 +76,7 @@ def read_dimacs(filename):
     return Gd
 
 
-def plot(G, cols):
+def plot():
     # symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
     # col_map = ["#" + ''.join(rng.choice(symbols, 6)) for _ in range(k + 1)]
     #
@@ -90,9 +90,10 @@ def plot(G, cols):
     initial_colors = greedy_color(G)
     print(is_coloring(G, initial_colors))
     color(G, initial_colors, len(set(initial_colors)), all_steps)
+    plt.pause(0.1)
 
     # nx.draw(G, node_color=colors, with_labels=True)
     # plt.show()
 
 
-plot(Gb, color_mus)
+plot()
