@@ -4,11 +4,8 @@ import numpy as np
 
 nodes = 7
 edges = 1
-all_steps = 10000
-file = 'dsjc250.txt'
-
-Gb = nx.Graph()
-color_mus = list(range(1, nodes + 1))
+all_steps = 100
+file = 'dsjc125.9.col.txt'
 rng = np.random.default_rng(12345)  # seed
 
 
@@ -19,21 +16,20 @@ def is_coloring(G, colors):
     return True
 
 
-def greedy_color(G):
-    colors = {}
-    for v in G.nodes:
-        used_colors = set(colors.get(n, -1) for n in G.neighbors(v))
-        for g_color in range(len(G.nodes)):
-            if g_color not in used_colors:
-                colors[v] = g_color
-                break
-    return list(colors.values())
+# def greedy_color(G):
+#     colors = {}
+#     for v in G.nodes:
+#         used_colors = set(colors.get(n, -1) for n in G.neighbors(v))
+#         for g_color in range(len(G.nodes)):
+#             if g_color not in used_colors:
+#                 colors[v] = g_color
+#                 break
+#     return list(colors.values())
 
 
 def color(G, colors, k, steps):
     best_col = colors[:]
     best_num_colors = len(set(colors))
-    current_col = []
 
     for i in range(steps):
         # Random walk
@@ -77,19 +73,18 @@ def read_dimacs(filename):
 
 
 def plot():
-    # symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
-    # col_map = ["#" + ''.join(rng.choice(symbols, 6)) for _ in range(k + 1)]
-    #
-    # colors = [col_map[c] for c in cols]
+    G = nx.Graph()
+    G = read_dimacs(file)
+    color_mus = list(range(G.number_of_nodes()))
+    symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+    col_map = ["#" + ''.join(rng.choice(symbols, 6)) for _ in range(G.number_of_nodes() + 1)]
+
+    colors = [col_map[c] for c in color_mus]
 
     # exam = is_coloring(Gb, colors)
     # print(exam)
-
-    plt.pause(0.001)
-    G = read_dimacs(file)
-    initial_colors = greedy_color(G)
-    print(is_coloring(G, initial_colors))
-    color(G, initial_colors, len(set(initial_colors)), all_steps)
+    print(is_coloring(G, colors))
+    color(G, colors, len(set(colors)), all_steps)
     plt.pause(0.1)
 
     # nx.draw(G, node_color=colors, with_labels=True)
