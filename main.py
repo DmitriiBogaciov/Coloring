@@ -4,8 +4,8 @@ import numpy as np
 
 nodes = 7
 edges = 1
-all_steps = 1000000
-file = 'dsjc250..txt'
+all_steps = 10000
+file = 'dsjc250.txt'
 
 Gb = nx.Graph()
 color_mus = list(range(1, nodes + 1))
@@ -86,10 +86,10 @@ def plot(G, cols):
     # print(exam)
 
     plt.pause(0.001)
-    Gd = read_dimacs(file)
-    initial_colors = greedy_color(Gd)
-    print(is_coloring(Gd, initial_colors))
-    color(Gd, initial_colors, len(set(initial_colors)), all_steps)
+    G = read_dimacs(file)
+    initial_colors = greedy_color(G)
+    print(is_coloring(G, initial_colors))
+    color(G, initial_colors, len(set(initial_colors)), all_steps)
 
     # nx.draw(G, node_color=colors, with_labels=True)
     # plt.show()
