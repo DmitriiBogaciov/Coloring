@@ -2,8 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
-nodes = 20
-edges = 4
+nodes = 10
+edges = 2
 all_steps = 1000
 
 Gb = nx.barabasi_albert_graph(nodes, edges)
