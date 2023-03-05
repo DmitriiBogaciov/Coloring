@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 nodes = 7
-edges = 1
-all_steps = 1000
+edges = 2
+all_steps = 100
 
 Gb = nx.barabasi_albert_graph(nodes, edges)
 color_mus = list(range(1, nodes + 1))
@@ -34,11 +34,11 @@ def color(G, colors, k, steps):
                 best_num_colors = len(set(col_new))
         # Hill climbing
         for j in range(steps):
-            r_node = rng.integers(G.number_of_nodes())  # выбираем случайную вершину
-            r_color = colors[rng.integers(k)]  # выбираем случайный цвет
-            col_new = best_col[:]  # копируем текущую раскраску новую раскраску
-            col_new[r_node] = r_color  # меняем цыет верщины
-            if is_coloring(G, col_new):  # проверяем если раскраска правильная
+            r_node = rng.integers(G.number_of_nodes())
+            r_color = colors[rng.integers(k)]
+            col_new = best_col[:]
+            col_new[r_node] = r_color
+            if is_coloring(G, col_new):
                 if len(set(col_new)) <= best_num_colors:
                     best_col = col_new[:]
                     best_num_colors = len(set(col_new))
