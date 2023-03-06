@@ -2,9 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
-nodes = 7
-edges = 1
-all_steps = 1000
+all_steps = 20000
 file = 'dsjc125.9.col.txt'
 rng = np.random.default_rng(12345)  # seed
 
@@ -40,6 +38,7 @@ def color(G, colors, k, steps):
         if is_coloring(G, col_new):  # проверяем если раскраска правильная
             if len(set(col_new)) <= best_num_colors:
                 current_col = col_new[:]
+                best_col = col_new[:]
                 # Hill climbing
                 for j in range(steps):
                     r_node = rng.integers(G.number_of_nodes())
@@ -50,7 +49,8 @@ def color(G, colors, k, steps):
                         if len(set(col_new)) <= len(set(current_col)):
                             current_col = col_new[:]
                             best_num_colors = len(set(col_new))
-                best_col = current_col[:]
+                    best_col = current_col[:]
+
     print(best_col)
     print(is_coloring(G, best_col))
     print(len(set(best_col)))
