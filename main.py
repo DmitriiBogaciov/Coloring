@@ -4,7 +4,7 @@ import numpy as np
 
 nodes = 7
 edges = 1
-all_steps = 100
+all_steps = 1000
 file = 'dsjc125.9.col.txt'
 rng = np.random.default_rng(12345)  # seed
 
@@ -44,12 +44,12 @@ def color(G, colors, k, steps):
                 for j in range(steps):
                     r_node = rng.integers(G.number_of_nodes())
                     r_color = colors[rng.integers(k)]
-                    col_new = best_col[:]
+                    col_new = current_col[:]
                     col_new[r_node] = r_color
                     if is_coloring(G, col_new):
                         if len(set(col_new)) <= len(set(current_col)):
                             current_col = col_new[:]
-                            best_num_colors = len(set(current_col))
+                            best_num_colors = len(set(col_new))
                 best_col = current_col[:]
     print(best_col)
     print(is_coloring(G, best_col))
@@ -73,7 +73,6 @@ def read_dimacs(filename):
 
 
 def plot():
-    G = nx.Graph()
     G = read_dimacs(file)
     color_mus = list(range(G.number_of_nodes()))
     symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
